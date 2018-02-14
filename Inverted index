@@ -1,0 +1,105 @@
+# Read strings
+lst = []
+for i in range(100):
+    lst.append(raw_input())
+
+# Set up indexes
+suoyin = {}
+for j in range(len(lst)):
+    words = lst[j].strip().split()
+    for word in words:
+        if word in suoyin:
+            if (j+1) in suoyin[word]:
+                break
+            else:
+                suoyin[word].append(j+1)
+        else:
+            suoyin[word] = [j+1]
+# Print indexes
+psuoyin = []
+for word, lines in suoyin.items():
+    psuoyin.append((word, lines))
+psuoyin.sort()
+
+for word, lines in psuoyin:
+    print word + ':', 
+    for i in range(len(lines)-1):
+        print str(lines[i]) + ',',
+    print lines[-1] 
+
+# Searching
+def chaxun(str):
+    results = []    
+    ws = str.strip().split()
+    for w in ws:
+        if w in suoyin:
+            results.append(suoyin[w])
+        else:
+            results.append([0])
+    return results
+
+def and_result(query):  
+    x = chaxun(query)
+    if [0] in x:
+        return 'None'
+    else:
+        for r in range(len(x)):
+            x[r] = set(x[r])
+        for i in range(len(x)):
+            x[0] = x[0] & x[i]
+        return x[0]
+
+def or_result(query):
+    x = chaxun(query)
+    if [0] in x:
+        x.remove([0])
+    if len(x):
+        for r in range(len(x)):
+            x[r] = set(x[r])
+        for i in range(len(x)):
+            x[0] = x[0] | x[i]
+        return x[0]
+    else:
+        return 'None'
+
+
+q = raw_input()
+if q[:4] == 'AND:':
+    result = and_result(q[4:])
+elif q[:3] == 'OR:':
+    result = or_result(q[3:])
+else:
+    result = and_result(q)
+
+if result == 'None':
+    print result
+else:
+    shuchu = list(result)
+    for i in range(len(shuchu)-1):
+        print str(shuchu[i]) + ',',
+    print shuchu[-1]
+
+# Insert several times and search
+s = raw_input()
+list = []
+while len(s)>0:
+    list.append(s)
+    try:
+        s = raw_input()
+    except:
+        break
+for j in range(len(list)):
+    q = list[j]
+    if q[:4] == 'AND:':
+        result = and_result(q[4:])
+    elif q[:3] == 'OR:':
+        result = or_result(q[3:])
+    else:
+        result = and_result(q)
+    if result == 'None':
+        print result
+    else:
+        shuchu = list(result)
+        for i in range(len(shuchu)-1):
+            print str(shuchu[i]) + ',',
+    print shuchu[-1]
