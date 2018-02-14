@@ -1,0 +1,41 @@
+def load_dict():
+    line = unicode(raw_input(), 'utf-8')
+     
+    word_dict = set()
+    max_length = 1
+     
+    words = line.split()
+    for word in words:
+        if len(word) > max_length:
+            max_length = len(word)
+        word_dict.add(word)
+     
+    return max_length, word_dict
+     
+def bmm_word_seg(sentence, word_dict, max_length):
+    words = []
+    sentence = unicode(sentence, 'utf-8')
+    right = len(sentence)
+     
+    while right > 0:
+        for left in range(max(right - max_length, 0), right,1):
+            word = sentence[left:right]
+            if word in word_dict or right == left + 1:
+                words.append(word)
+                break
+        right = left
+         
+    return words
+max_length, word_dict = load_dict()
+list=[]
+while 1:
+   seginput=raw_input()
+   if seginput=='':
+      break
+   words = bmm_word_seg(seginput, word_dict, max_length)
+   words.reverse()
+   list.append(words)
+for words in list:
+     for word in words:
+            print word.encode('utf-8'),
+     print
